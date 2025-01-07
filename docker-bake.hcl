@@ -30,7 +30,7 @@ function "get_tags" {
 
 function "get_platforms_multiarch" {
   params = []
-  result = (CI || PUSH) ? ["linux/amd64", "linux/arm/v6", "linux/arm/v7", "linux/arm64"] : []
+  result = (CI || PUSH) ? ["linux/amd64"] : []
 }
 
 function "get_output" {
