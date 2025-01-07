@@ -27,7 +27,7 @@ RUN <<EOT
   if [ -z ${GITHUB_TOKEN} ]; then
     if [ ${CI} != "true" ]; then FLAGS="${FLAGS} --skip=validate"; fi
     if [ ${PUSH} != "true" ]; then FLAGS="${FLAGS} --single-target"; fi
-    goreleaser build ${FLAGS} --snapshot
+    goreleaser build ${FLAGS}
   else
     goreleaser release ${FLAGS}
   fi
