@@ -13,14 +13,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
-      - name: Establish Versioning, Tags, and Labels
-        id: vtl
-        uses: mapped/action-vtl@latest
-        with:
-          baseVersion: 2.0.0
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          dockerImage: docker.io/mapped/nack
       
       - name: Setup Go
         id: setup-go
@@ -47,10 +39,5 @@ jobs:
           push: true
           set: goreleaser.args.GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         env:
-          TAGS: "${{ steps.vtl.outputs.docker_tags }}"
+          TAGS: latest
           REGISTRY: docker.io/mapped
-
-      - name: Attach Release Files
-        run: gh release upload ${{ github.ref_name }} deploy/crds.yml deploy/rbac.yml
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
