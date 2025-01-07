@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - README.md
+
+jobs:
+  build-docker-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Establish Versioning, Tags, and Labels
+        id: vtl
+        uses: mapped/action-vtl@latest
+        with:
+          baseVersion: 2.0.0
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          dockerImage: docker.io/mapped/nack
+      
+      - name: Setup Go
+        id: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_WRITE_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/bake-action@v5
+        with:
+          files: docker-bake.hcl
+          push: true
+          set: goreleaser.args.GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        env:
+          TAGS: "${{ steps.tags.outputs.tags }}"
+          REGISTRY: docker.io/mapped
+
+      - name: Attach Release Files
+        run: gh release upload ${{ github.ref_name }} deploy/crds.yml deploy/rbac.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

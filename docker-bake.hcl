@@ -44,9 +44,7 @@ function "get_output" {
 
 group "default" {
   targets = [
-    "jetstream-controller",
-    "nats-boot-config",
-    "nats-server-config-reloader"
+    "jetstream-controller"
   ]
 }
 
@@ -76,49 +74,6 @@ target "jetstream-controller" {
   }
   dockerfile  = "cicd/Dockerfile"
   platforms   = get_platforms_multiarch()
-  tags        = get_tags("jetstream-controller")
-  output      = get_output()
-}
-
-target "nats-boot-config-base" {
-  contexts = {
-    build   = "target:goreleaser"
-    assets  = "cicd/assets"
-  }
-  args = {
-    GO_APP = "nats-boot-config"
-  }
-  dockerfile  = "cicd/Dockerfile"
-  platforms   = get_platforms_multiarch()
-}
-
-target "nats-boot-config" {
-  inherits = ["nats-boot-config-base"]
-  contexts = {
-    base     = "target:nats-boot-config-base"
-  }
-
-  dockerfile-inline = <<EOT
-ARG GO_APP
-FROM base
-RUN ln -s /usr/local/bin/$GO_APP /usr/local/bin/nats-pod-bootconfig
-EOT
-
-  platforms   = get_platforms_multiarch()
-  tags        = get_tags("nats-boot-config")
-  output      = get_output()
-}
-
-target "nats-server-config-reloader" {
-  contexts = {
-    build   = "target:goreleaser"
-    assets  = "cicd/assets"
-  }
-  args = {
-    GO_APP = "nats-server-config-reloader"
-  }
-  dockerfile  = "cicd/Dockerfile"
-  platforms   = get_platforms_multiarch()
-  tags        = get_tags("nats-server-config-reloader")
+  tags        = get_tags("nack")
   output      = get_output()
 }
