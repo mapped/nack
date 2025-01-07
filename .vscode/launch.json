@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run locally",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "./cmd/jetstream-controller/main.go",
+            "args": ["--crd-connect", "--kubeconfig", "C:\\Users\\IvanSabelnikov\\.kube\\config"],
+            "env": {
+            }
+        }
+
+    ]
+}
