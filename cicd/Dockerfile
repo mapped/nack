@@ -25,7 +25,8 @@ RUN <<EOT
                                 .goos   == \"${TARGETOS}\" and \
                                 .goarch == \"${TARGETARCH}\" and \
                                 (.goarm == \"${VARIANT}\" or .goarm == null)) | .path" < /go/src/dist/artifacts.json)
-  echo "BIN_PATH: ${BIN_PATH}"
+  cat /go/src/dist/artifacts.json
+  echo "BIN_PATH: ${BIN_PATH}, TARGETOS: ${TARGETOS}, TARGETARCH: ${TARGETARCH}, TARGETVARIANT: ${TARGETVARIANT}"
   cp ${BIN_PATH} /go/bin
 EOT
 
