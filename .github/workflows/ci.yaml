@@ -47,7 +47,7 @@ jobs:
           push: true
           set: goreleaser.args.GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         env:
-          TAGS: "${{ steps.tags.outputs.tags }}"
+          TAGS: "${{ steps.vtl.outputs.docker_tags }}"
           REGISTRY: docker.io/mapped
 
       - name: Attach Release Files
